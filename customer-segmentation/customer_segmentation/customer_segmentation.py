@@ -7,22 +7,21 @@ from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 
 
-data = pd.read_csv('/Users/izabellamartirosyan/Desktop/Customer-Segmentation-for-for-Mall/Mall_Customers data.csv')
+data = pd.read_csv('/Users/izabellamartirosyan/Desktop/Customer-Segmentation-for-for-Mall/Mall_Customers_data.csv')
 
-
+# If the gender column will be a categorical, the function will transform it into numerical.
+# Returns the updated dataframe 
 
 def categorical_gender(data):
-    """If the gender column will be a categorical, the function will transform it into numerical.
-    Returns the updated dataframe"""
     data['Gender'].replace(['Male', 'Female'],[0, 1], inplace=True)
     return data
 categorical_gender(data)
 
 
+# Creates a scatter plot between Age and Spending score of a customer
+# returns a scatter plot
+
 def age_vs_spending_score(data):
-    """Creates a scatter plot between Age and Spending score of a customer
-    returns a scatter plot
-    """
     plt.figure(figsize=(10,6))
     plt.scatter(data['Age'],data['Spending Score (1-100)'], marker='o');
     plt.xlabel('Age')
@@ -33,13 +32,10 @@ def age_vs_spending_score(data):
 age_vs_spending_score(data)
 
 
-
-
+# Creates a scatter plot between age and annual income
+#  returns a scatter plot
 
 def age_vs_annualincome(data):
-    """Creates a scatter plot between age and annual income
-    returns a scatter plot
-    """
     plt.figure(figsize=(10,6))
     plt.scatter(data['Age'],data['Annual Income (k$)'], marker='o');
     plt.xlabel('Age')
@@ -50,10 +46,11 @@ def age_vs_annualincome(data):
 age_vs_annualincome(data)
 
 
+# Creates a scatter plot between income and spending score
+# Returns a scatter plot
+
 def annualincome_vs_spendingscore(data):
-    """Creates a scatter plot between income and spending score
-    Returns a scatter plot
-    """
+
     plt.figure(figsize=(10,6))
     plt.scatter(data['Annual Income (k$)'],data['Spending Score (1-100)'], marker='o');
     plt.xlabel('Annual Income')
@@ -63,11 +60,10 @@ def annualincome_vs_spendingscore(data):
 
 annualincome_vs_spendingscore(data)
 
+# Creates a scatter plot between gender and spending score
+# Returns a scatter plot 
 
 def gender_vs_spendingscore(data):
-    """Creates a scatter plot between gender and spending score
-    Returns a scatter plot
-    """
     plt.figure(figsize=(10,6))
     plt.scatter(data['Gender'],data['Spending Score (1-100)'], marker='o');
     plt.xlabel('Gender')
@@ -77,10 +73,10 @@ def gender_vs_spendingscore(data):
 
 gender_vs_spendingscore(data)
 
+# Plots a correlation heatmap between variables
+# Returns a correlation heatmap
 
 def corr(data):
-    """Plots a correlation heatmap between variables
-    Returns a correlation heatmap"""
     fig_dims = (7, 7)
     fig, ax = plt.subplots(figsize=fig_dims)
     sns.heatmap(data.corr(), annot=True, cmap='viridis')
@@ -89,14 +85,13 @@ def corr(data):
 corr(data)
 
 
-
 scaler = StandardScaler()
 scaled_data = scaler.fit_transform(data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
 
+# Returns optimal number of clusters data should be divided to
+# Returns a plot
 
 def elbow(data):
-    """Returns optimal number of clusters data should be divided to
-    Returns a plot"""
     wcss = []
     for i in range(1, 11):
         kmeans = KMeans(n_clusters=i, init='k-means++',
@@ -115,13 +110,11 @@ def elbow(data):
     return plt
 elbow(data)
 
-
-
-# depending on the optimal number of clusters we got on elbow method, we will use that to do clustering
+# Returns mall customers divided to 5 clusters based on annual income and spending score
+# Returns a scatter plot
 
 def clustering_new(data):
-    """Returns mall customers divided to 5 clusters based on annual income and spending score
-    Returns a scatter plot"""
+
 
     x = data.copy()
     kmeans_new = KMeans(5)
@@ -139,10 +132,10 @@ def clustering_new(data):
     return plt
 clustering_new(data)
 
+# Visualizes clusters based on age
+# Returns a bar plot
 
 def barplot_age(data):
-    """"Visualizes clusters based on age
-    Returns a bar plot"""
     x = data.copy()
     kmeans_new = KMeans(5)
     kmeans_new.fit(x)
@@ -153,9 +146,10 @@ def barplot_age(data):
     return sns
 barplot_age(data)
 
+# Visualizes clusters based on Annual Income
+# Returns a bar plot
 def barplot_annualincome(data):
-    """"Visualizes clusters based on Annual Income
-        Returns a bar plot"""
+
     x = data.copy()
     kmeans_new = KMeans(5)
     kmeans_new.fit(x)
@@ -166,9 +160,9 @@ def barplot_annualincome(data):
     return sns
 barplot_annualincome(data)
 
+# Visualizes clusters based on Spending Scores
+# Returns a bar plot
 def barplot_spendingscore(data):
-    """"Visualizes clusters based on Spending Scores
-        Returns a bar plot"""
     x = data.copy()
     kmeans_new = KMeans(5)
     kmeans_new.fit(x)
@@ -182,8 +176,8 @@ barplot_spendingscore(data)
 KMeans(data)
 
 
-# For a clearer understanding of the distribution range, a box plot demonstrates expenditure score and yearly income. 
-# Clearly, the range of spending exceeds the range of yearly income.
+# An spending score and annual income are shown on a box plot to help comprehend the distribution range. 
+# It is obvious that the range of expenses exceeds the range of annual revenue.
 
 
 plt.figure(figsize=(15,6))
@@ -222,7 +216,7 @@ plt.xlabel("Age")
 plt.ylabel("Number of Customer")
 plt.show()
 
-#A bar chart visualizing the number of clients by annual income.
+# A bar chart visualizing the number of clients by annual income.
 #  Most of the customers make between 60,000 and 90,000 he year.
 
 income0_30 = data["Annual Income (k$)"][(data["Annual Income (k$)"] >= 0) & (data["Annual Income (k$)"] <= 30)]
@@ -256,11 +250,11 @@ import pandas as pd
  
 fig = plt.figure(figsize=(20,10))
 ax = fig.add_subplot(111, projection='3d')
-ax.scatter(data.Age[data.label == 0], data["Annual Income (k$)"][data.label == 0], df["Spending Score (1-100)"][data.label == 0], c='blue', s=60)
-ax.scatter(data.Age[data.label == 1], data["Annual Income (k$)"][data.label == 1], df["Spending Score (1-100)"][data.label == 1], c='red', s=60)
-ax.scatter(data.Age[data.label == 2], data["Annual Income (k$)"][data.label == 2], df["Spending Score (1-100)"][data.label == 2], c='green', s=60)
-ax.scatter(data.Age[data.label == 3], data["Annual Income (k$)"][data.label == 3], df["Spending Score (1-100)"][data.label == 3], c='orange', s=60)
-ax.scatter(data.Age[data.label == 4], data["Annual Income (k$)"][data.label == 4], df["Spending Score (1-100)"][data.label == 4], c='purple', s=60)
+ax.scatter(data.Age[data.label == 0], data["Annual Income (k$)"][data.label == 0], data["Spending Score (1-100)"][data.label == 0], c='blue', s=60)
+ax.scatter(data.Age[data.label == 1], data["Annual Income (k$)"][data.label == 1], data["Spending Score (1-100)"][data.label == 1], c='red', s=60)
+ax.scatter(data.Age[data.label == 2], data["Annual Income (k$)"][data.label == 2], data["Spending Score (1-100)"][data.label == 2], c='green', s=60)
+ax.scatter(data.Age[data.label == 3], data["Annual Income (k$)"][data.label == 3], data["Spending Score (1-100)"][data.label == 3], c='orange', s=60)
+ax.scatter(data.Age[data.label == 4], data["Annual Income (k$)"][data.label == 4], data["Spending Score (1-100)"][data.label == 4], c='purple', s=60)
 ax.view_init(30, 185)
 plt.xlabel("Age")
 plt.ylabel("Annual Income (k$)")
